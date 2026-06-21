@@ -1,0 +1,9 @@
+{
+  "name": "tram-ac",
+  "private": true,
+  "scripts": {
+    "dev:server": "pnpm --filter server dev",
+    "dev:web": "pnpm --filter web dev",
+    "test": "pnpm -r test"
+  }
+}

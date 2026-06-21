@@ -1,0 +1,36 @@
+import type { Departure, GolemioDepartureboards, Stop, GolemioStops } from "./types.ts";
+
+export function normalizeDepartures(raw: GolemioDepartureboards): Departure[] {
+  const list = raw?.departures ?? [];
+  return list
+    .map((d): Departure => {
+      const acRaw = d.trip?.is_air_conditioned;
+      return {
+        line: String(d.route?.short_name ?? ""),
+        headsign: String(d.trip?.headsign ?? ""),
+        minutes: Number(d.departure_timestamp?.minutes ?? 0),
+        airConditioned: acRaw === true ? true : acRaw === false ? false : null,
+      };
+    })
+    .sort((a, b) => a.minutes - b.minutes);
+}
+
+export function normalizeStops(raw: GolemioStops): Stop[] {
+  const features = raw?.features ?? [];
+  const out: Stop[] = [];
+  for (const f of features) {
+    const p = f.properties;
+    const coords = f.geometry?.coordinates;
+    // Only boardable platforms (location_type 0); skip stations/entrances/nodes.
+    if (!p || p.location_type !== 0 || !p.stop_id || !coords) continue;
+    out.push({
+      id: p.stop_id,
+      name: String(p.stop_name ?? ""),
+      platformCode: p.platform_code ?? undefined,
+      lat: coords[1],
+      lon: coords[0],
+      distanceM: p.distance != null ? Math.round(p.distance) : undefined,
+    });
+  }
+  return out;
+}
