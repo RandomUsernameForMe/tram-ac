@@ -16,6 +16,20 @@ export function normalizeDepartures(raw: GolemioDepartureboards): Departure[] {
     .sort((a, b) => a.minutes - b.minutes);
 }
 
+// Collapse duplicate platform rows (same stop name + platform code). gtfs/stops
+// can return several stop_ids for one physical platform; keep the nearest.
+export function dedupeStops(stops: Stop[]): Stop[] {
+  const seen = new Set<string>();
+  const out: Stop[] = [];
+  for (const s of stops) {
+    const key = `${s.name}|${s.platformCode ?? ""}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(s);
+  }
+  return out;
+}
+
 export function normalizeStops(raw: GolemioStops): Stop[] {
   const features = raw?.features ?? [];
   const out: Stop[] = [];

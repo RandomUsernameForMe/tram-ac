@@ -1,7 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { setCors } from "../core/src/cors";
-import { fetchStops } from "../core/src/golemio";
-import { normalizeStops } from "../core/src/normalize";
+import { fetchStops, fetchDepartureboards } from "../core/src/golemio";
+import { normalizeStops, normalizeDepartures, dedupeStops } from "../core/src/normalize";
+
+const CANDIDATES = 14; // nearest physical platforms to board-check (bounds Golemio calls)
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   setCors(res);
@@ -13,7 +15,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   try {
     const raw = await fetchStops(lat, lon);
-    res.status(200).json({ stops: normalizeStops(raw) });
+    const candidates = dedupeStops(normalizeStops(raw)).slice(0, CANDIDATES);
+    // Keep only stops that actually serve trams (gtfs/stops has no mode info).
+    const boards = await Promise.all(
+      candidates.map((s) => fetchDepartureboards(s.id).then(normalizeDepartures).catch(() => [])),
+    );
+    const stops = candidates.filter((_, i) => boards[i].length > 0);
+    res.status(200).json({ stops });
   } catch (e) {
     res.status(502).json({ error: String(e) });
   }
