@@ -2,14 +2,9 @@
   "name": "server",
   "private": true,
   "type": "module",
+  "description": "Shared Golemio data logic (golemio client + normalizers), consumed by /api serverless functions.",
   "scripts": {
-    "dev": "node --watch --experimental-strip-types src/index.ts",
-    "start": "node --experimental-strip-types src/index.ts",
     "test": "vitest run"
-  },
-  "dependencies": {
-    "fastify": "^5.2.0",
-    "@fastify/cors": "^10.0.0"
   },
   "devDependencies": {
     "vitest": "^2.1.0",

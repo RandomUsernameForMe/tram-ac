@@ -1,9 +1,15 @@
 {
   "name": "tram-ac",
   "private": true,
+  "engines": { "node": ">=22" },
   "scripts": {
-    "dev:server": "pnpm --filter server dev",
-    "dev:web": "pnpm --filter web dev",
-    "test": "pnpm -r test"
+    "dev": "vercel dev",
+    "build": "pnpm --filter web build",
+    "test": "pnpm -r test && vitest run"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.2.0",
+    "vitest": "^2.1.0",
+    "typescript": "^5.7.0"
   }
 }
