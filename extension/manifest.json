@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Tram-AC",
+  "version": "0.1.0",
+  "description": "Is your next Prague tram air-conditioned? Shows AC beside Google Maps.",
+  "permissions": ["sidePanel", "tabs"],
+  "host_permissions": ["https://www.google.com/maps/*", "https://tram-ac.vercel.app/*"],
+  "background": { "service_worker": "src/background.ts", "type": "module" },
+  "side_panel": { "default_path": "index.html" },
+  "content_scripts": [
+    { "matches": ["https://www.google.com/maps/*"], "js": ["src/content.ts"], "run_at": "document_idle" }
+  ],
+  "action": { "default_title": "Tram-AC ❄️" }
+}
