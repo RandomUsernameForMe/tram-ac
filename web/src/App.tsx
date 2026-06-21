@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Stop, Departure } from "./types.ts";
 import { getStops, getDepartures } from "./api.ts";
 import { StopList } from "./components/StopList.tsx";
-import { Board } from "./components/Board.tsx";
+import { Board } from "shared";
 
 type Screen =
   | { k: "locating" }
@@ -41,7 +41,12 @@ export default function App() {
       {screen.k === "locating" && <p>Finding nearby stops…</p>}
       {screen.k === "error" && <p style={{ color: "#ff9b9b" }}>{screen.msg}</p>}
       {screen.k === "stops" && <StopList stops={screen.stops} onPick={pick} />}
-      {screen.k === "board" && <Board stopName={screen.stop.name} platformCode={screen.stop.platformCode} departures={screen.departures} onBack={() => setScreen({ k: "stops", stops })} />}
+      {screen.k === "board" && (
+        <div>
+          <button onClick={() => setScreen({ k: "stops", stops })} style={{ marginBottom: 12 }}>← stops</button>
+          <Board stopName={screen.stop.name} platformCode={screen.stop.platformCode} departures={screen.departures} />
+        </div>
+      )}
     </main>
   );
 }
