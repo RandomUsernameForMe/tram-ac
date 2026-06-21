@@ -1,7 +1,6 @@
 {
   "name": "server",
   "private": true,
-  "type": "module",
   "description": "Shared Golemio data logic (golemio client + normalizers), consumed by /api serverless functions.",
   "scripts": {
     "test": "vitest run"
