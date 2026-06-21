@@ -4,20 +4,30 @@ Is your next Prague tram air-conditioned? PWA + thin backend over Golemio open d
 
 In a heatwave, decide at the stop: take the tram now, or wait one for an air-conditioned car.
 
+**Live:** https://tram-ac.vercel.app
+
+## Architecture
+- `web/` — Vite + React PWA (static).
+- `api/` — Vercel serverless functions (`/api/health`, `/api/departures`, `/api/stops`).
+- `server/src/` — shared Golemio logic (HTTP client + normalizers) imported by the functions; also unit-tested here.
+- Same-origin: the PWA calls `/api/*` (no CORS).
+
 ## Dev
 1. Get a free Golemio key: https://api.golemio.cz/api-keys
 2. `export GOLEMIO_KEY=<key>`
 3. `pnpm install`
-4. `pnpm dev:server` and `pnpm dev:web` (separate terminals)
+4. `vercel dev` (serves PWA + `/api/*` together), or `pnpm --filter web dev` for UI-only.
 
 ## Test
-`pnpm test`  (runs server + web vitest)
+`pnpm test`  (server + web + api-handler vitest)
 
-## Deploy (Railway)
-- Service `server`: start `node --experimental-strip-types src/index.ts`, env `GOLEMIO_KEY`, `PORT`.
-- Web: `pnpm --filter web build`, serve `web/dist` as static (Railway static or Netlify). Set `VITE_API_BASE` to the deployed server URL at build time.
+## Deploy (Vercel)
+- Connected to GitHub `RandomUsernameForMe/tram-ac`; pushes auto-deploy.
+- Build: `pnpm --filter web build` → `web/dist` (static); `api/*.ts` become functions.
+- Env: set `GOLEMIO_KEY` (production) in Vercel project settings.
+- Manual: `vercel deploy --prod`.
 
 ## Status
-Phase 1 (backend + PWA) implemented. Tests run against captured fixtures.
-Pending a Golemio key: real fixture capture (server probe) and live smoke tests.
-Phase 2 (browser extension for Google Maps) is a separate plan.
+Phase 1 (PWA + API) deployed and live-verified against real Golemio data.
+Phase 2 (browser extension for Google Maps) is a separate plan — will need CORS
+headers on the functions (currently same-origin only).
