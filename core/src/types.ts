@@ -17,7 +17,7 @@ export interface Stop {
 
 // Minimal raw shapes we read from Golemio departureboards.
 export interface GolemioRawDeparture {
-  route?: { short_name?: string };
+  route?: { short_name?: string; type?: number }; // GTFS route_type: 0 = tram
   trip?: { headsign?: string; is_air_conditioned?: boolean | null };
   departure_timestamp?: { minutes?: number | string };
 }

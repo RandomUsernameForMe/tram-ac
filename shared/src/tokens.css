@@ -1,0 +1,67 @@
+/* PragAC design tokens — ICE vs FIRE. Ported from the Claude Design handoff. */
+
+/* ---- Webfonts (Fontsource CDN) ---- */
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-grotesk@latest/latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-mono@latest/latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Mono"; font-style: normal; font-weight: 700; font-display: swap; src: url("https://cdn.jsdelivr.net/fontsource/fonts/space-mono@latest/latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  /* COOL · ICE */
+  --cool-50:#ecf6ff; --cool-100:#cde8ff; --cool-200:#9bd2ff; --cool-300:#5fb6ff;
+  --cool-400:#2f97ff; --cool-500:#0d83f5; --cool-600:#0a66c9; --cool-700:#0a4e9c; --cool-800:#0a3a73;
+  /* HOT · FIRE */
+  --hot-50:#fff0e9; --hot-100:#ffd4c0; --hot-200:#ffae88; --hot-300:#ff8450;
+  --hot-400:#ff551f; --hot-500:#f5380a; --hot-600:#d3260a; --hot-700:#a81b0c;
+  /* INK */
+  --ink-900:#061021; --ink-800:#0a1a33; --ink-700:#112748; --ink-600:#1b3a64;
+  /* SLATE */
+  --slate-50:#f4f7fb; --slate-100:#e8eef6; --slate-200:#d6e0ec; --slate-300:#b6c4d6;
+  --slate-400:#8597ad; --slate-500:#5f6e83; --slate-600:#44515f; --slate-700:#2c3742; --slate-900:#111824;
+  --white:#ffffff;
+
+  --text-strong:var(--ink-900); --text-body:var(--slate-700); --text-muted:var(--slate-500);
+  --text-faint:var(--slate-400); --text-inverse:var(--cool-50); --text-accent:var(--cool-700);
+  --surface-page:var(--slate-50); --surface-card:var(--white); --surface-sunken:var(--slate-100);
+  --surface-ink:var(--ink-800); --surface-cool:var(--cool-50); --surface-hot:var(--hot-50);
+  --border-subtle:var(--slate-200); --border-strong:var(--slate-300); --border-ink:var(--ink-600);
+  --accent:var(--cool-500); --accent-hover:var(--cool-600); --accent-press:var(--cool-700); --accent-soft:var(--cool-50);
+
+  --status-ac:var(--cool-500); --status-ac-soft:var(--cool-50); --status-ac-ink:var(--cool-700);
+  --status-noac:var(--hot-500); --status-noac-soft:var(--hot-50); --status-noac-ink:var(--hot-700);
+  --status-unknown:var(--slate-400); --status-unknown-soft:var(--slate-100); --status-unknown-ink:var(--slate-600);
+
+  --thermal-strip:linear-gradient(90deg,#ffd400 0%,var(--hot-500) 20%,var(--hot-400) 36%,#b9529a 52%,var(--cool-400) 70%,var(--cool-500) 86%,#7fe7ff 100%);
+  --blaze-fire:radial-gradient(120% 120% at 18% 8%,#ff7a2e 0%,var(--hot-600) 42%,#5a0f0a 100%);
+  --blaze-ice:radial-gradient(120% 120% at 82% 8%,#7fe7ff 0%,var(--cool-500) 40%,#06204a 100%);
+  --focus-ring:0 0 0 3px var(--cool-200);
+
+  /* Type */
+  --font-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --font-ui:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --font-mono:"Space Mono",ui-monospace,"SFMono-Regular",monospace;
+
+  /* Spacing / radii */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px;
+  --radius-xs:6px; --radius-sm:10px; --radius-md:12px; --radius-lg:16px; --radius-xl:22px; --radius-pill:999px;
+  --target-min:48px; --app-max-width:480px; --thermal-strip-h:4px;
+
+  /* Elevation / motion */
+  --shadow-xs:0 1px 2px rgba(6,16,33,0.06); --shadow-sm:0 2px 6px rgba(6,16,33,0.09);
+  --shadow-md:0 6px 18px rgba(6,16,33,0.12); --shadow-lg:0 14px 36px rgba(6,16,33,0.16); --shadow-xl:0 24px 60px rgba(6,16,33,0.22);
+  --glow-cool:0 8px 26px rgba(13,131,245,0.38); --glow-hot:0 8px 26px rgba(245,56,10,0.36);
+  --ease-out:cubic-bezier(0.22,1,0.36,1); --ease-in-out:cubic-bezier(0.65,0,0.35,1);
+  --dur-fast:120ms; --dur-base:200ms; --dur-slow:320ms;
+}
+
+@keyframes pragPing { 0% { transform: scale(0.92); opacity: 0.6; } 100% { transform: scale(1.45); opacity: 0; } }
+@keyframes pragBounce { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-6px); opacity: 1; } }
+@keyframes pragFlicker { 0%,100% { opacity: 0.18; transform: translateY(-50%) scale(1); } 50% { opacity: 0.3; transform: translateY(-52%) scale(1.04); } }
+@keyframes pragSpin { to { transform: rotate(360deg); } }
+@keyframes pragPulse { 0% { box-shadow: 0 0 0 0 rgba(13,131,245,.5); } 70% { box-shadow: 0 0 0 5px rgba(13,131,245,0); } 100% { box-shadow: 0 0 0 0 rgba(13,131,245,0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+}

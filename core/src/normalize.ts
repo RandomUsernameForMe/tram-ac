@@ -3,6 +3,7 @@ import type { Departure, GolemioDepartureboards, Stop, GolemioStops } from "./ty
 export function normalizeDepartures(raw: GolemioDepartureboards): Departure[] {
   const list = raw?.departures ?? [];
   return list
+    .filter((d) => d.route?.type === 0) // trams only (GTFS route_type 0); AC variance is a tram thing
     .map((d): Departure => {
       const acRaw = d.trip?.is_air_conditioned;
       return {

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import type { Stop, Departure } from "./types.ts";
+import type { ReactNode } from "react";
+import type { Stop, Departure } from "shared";
 import { getStops, getDepartures } from "./api.ts";
-import { StopList } from "./components/StopList.tsx";
-import { Board } from "shared";
+import { LocatingScreen } from "./screens/LocatingScreen.tsx";
+import { StopsScreen } from "./screens/StopsScreen.tsx";
+import { BoardScreen } from "./screens/BoardScreen.tsx";
 
 type Screen =
   | { k: "locating" }
   | { k: "stops"; stops: Stop[] }
-  | { k: "board"; stop: Stop; departures: Departure[] }
+  | { k: "board"; stop: Stop; board: Departure[] }
   | { k: "error"; msg: string };
 
 export default function App() {
@@ -15,7 +17,7 @@ export default function App() {
   const [stops, setStops] = useState<Stop[]>([]);
 
   useEffect(() => {
-    if (!navigator.geolocation) { setScreen({ k: "error", msg: "Geolocation unavailable" }); return; }
+    if (!navigator.geolocation) { setScreen({ k: "error", msg: "Geolokace není dostupná" }); return; }
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
@@ -24,29 +26,23 @@ export default function App() {
           setScreen({ k: "stops", stops: near });
         } catch (e) { setScreen({ k: "error", msg: String(e) }); }
       },
-      () => setScreen({ k: "error", msg: "Location permission denied" }),
+      () => setScreen({ k: "error", msg: "Přístup k poloze zamítnut" }),
     );
   }, []);
 
   async function pick(stop: Stop) {
     try {
-      const departures = await getDepartures(stop.id);
-      setScreen({ k: "board", stop, departures });
+      const board = await getDepartures(stop.id);
+      setScreen({ k: "board", stop, board });
     } catch (e) { setScreen({ k: "error", msg: String(e) }); }
   }
 
-  return (
-    <main style={{ maxWidth: 480, margin: "0 auto", padding: 16, fontFamily: "system-ui, sans-serif", color: "#eaf5f0", background: "#0b3d2e", minHeight: "100vh" }}>
-      <h1 style={{ fontSize: 20 }}>PragAC ❄️</h1>
-      {screen.k === "locating" && <p>Finding nearby stops…</p>}
-      {screen.k === "error" && <p style={{ color: "#ff9b9b" }}>{screen.msg}</p>}
-      {screen.k === "stops" && <StopList stops={screen.stops} onPick={pick} />}
-      {screen.k === "board" && (
-        <div>
-          <button onClick={() => setScreen({ k: "stops", stops })} style={{ marginBottom: 12 }}>← stops</button>
-          <Board stopName={screen.stop.name} platformCode={screen.stop.platformCode} departures={screen.departures} />
-        </div>
-      )}
-    </main>
-  );
+  if (screen.k === "locating") return <LocatingScreen />;
+  if (screen.k === "stops") return <Wrap><StopsScreen stops={screen.stops} onPick={pick} /></Wrap>;
+  if (screen.k === "board") return <Wrap><BoardScreen stop={screen.stop} board={screen.board} onBack={() => setScreen({ k: "stops", stops })} /></Wrap>;
+  return <Wrap><div style={{ padding: 24, color: "var(--status-noac-ink)", fontFamily: "var(--font-ui)" }}>{screen.msg}</div></Wrap>;
+}
+
+function Wrap({ children }: { children: ReactNode }) {
+  return <main style={{ maxWidth: "var(--app-max-width)", margin: "0 auto", background: "var(--surface-page)", minHeight: "100vh", fontFamily: "var(--font-ui)" }}>{children}</main>;
 }
