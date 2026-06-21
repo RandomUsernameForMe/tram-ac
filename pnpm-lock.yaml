@@ -30,6 +30,21 @@ importers:
         specifier: ^2.1.0
         version: 2.1.9(@edge-runtime/vm@3.2.0)(@types/node@22.19.21)(terser@5.48.0)
 
+  shared:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.0
+        version: 18.3.31
+      react:
+        specifier: ^18.3.0
+        version: 18.3.1
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@edge-runtime/vm@3.2.0)(@types/node@22.19.21)(terser@5.48.0)
+
   web:
     dependencies:
       react:
