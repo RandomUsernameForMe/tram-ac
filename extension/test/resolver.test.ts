@@ -22,4 +22,9 @@ describe("pickPlatform", () => {
     const out = pickPlatform([{ stop: stopA, departures: depA }], { line: "22", destination: "" });
     expect(out).toBeNull();
   });
+  it("prefers platformCode when present (from Maps detail view)", () => {
+    const out = pickPlatform([{ stop: stopA, departures: [] }, { stop: stopB, departures: [] }],
+      { line: "22", destination: "", platformCode: "B" });
+    expect(out?.id).toBe("U539Z2P");
+  });
 });

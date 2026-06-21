@@ -1,4 +1,4 @@
-import { parseOverview, parseLeg } from "./scrape.ts";
+import { parseDetail, parseOverview, parseLeg } from "./scrape.ts";
 import type { ScrapedLeg } from "./types.ts";
 
 // Google Maps transit DOM is obfuscated and localized, so we parse the directions
@@ -8,6 +8,9 @@ import type { ScrapedLeg } from "./types.ts";
 function readLeg(): ScrapedLeg | null {
   const panel = document.querySelector('[role="main"]') as HTMLElement | null;
   const text = panel?.innerText ?? document.body.innerText ?? "";
+  // Detail view (user expanded "Details") is richest: gives headsign + platform. Prefer it.
+  const detail = parseDetail(text);
+  if (detail) return detail;
   const overview = parseOverview(text);
   if (overview) return overview;
 

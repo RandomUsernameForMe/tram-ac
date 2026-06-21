@@ -1,5 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { parseLeg, parseOverview } from "../src/scrape.ts";
+import { parseLeg, parseOverview, parseDetail } from "../src/scrape.ts";
+
+describe("parseDetail", () => {
+  it("extracts line, stop, headsign, platform from real captured detail text", () => {
+    // Captured headlessly from the expanded Maps detail view (cs locale):
+    const text = "9:13 - 9:49 (36 min) 22 9:16 z: Národní třída 50,00 Kč 3 min 9:13 Národní 110 00 Praha 1 Pěšky Přibližně 3 min, 240 m 9:16 Národní třída 22Nádraží Hostivař 33 min (zastávky: 24) · Nástupiště A · 9:49 Nádraží Hostivař";
+    expect(parseDetail(text)).toEqual({ line: "22", stopName: "Národní třída", destination: "Nádraží Hostivař", platformCode: "A" });
+  });
+  it("returns null on overview-only text (no expanded step)", () => {
+    expect(parseDetail("38 min 9:11—9:49 22 9:14 z: Národní divadlo 50,00 Kč 3 min Podrobnosti")).toBeNull();
+  });
+});
 
 describe("parseOverview", () => {
   it("extracts line + boarding stop from real captured cs overview text", () => {
