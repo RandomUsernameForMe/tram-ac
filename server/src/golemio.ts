@@ -27,3 +27,22 @@ export function fetchStops(lat: number, lng: number, opts: Opts = {}): Promise<G
   u.searchParams.set("limit", "40");             // platforms get filtered to location_type 0 downstream
   return get<GolemioStops>(u.toString(), opts);
 }
+
+export function fetchStopsByName(name: string, opts: Opts = {}): Promise<GolemioStops> {
+  const u = new URL(`${config.golemioBase}/gtfs/stops`);
+  u.searchParams.append("names[]", name);
+  u.searchParams.set("limit", "50");
+  return get<GolemioStops>(u.toString(), opts);
+}
+
+export async function fetchAllStopNames(opts: Opts = {}): Promise<string[]> {
+  const u = new URL(`${config.golemioBase}/gtfs/stops`);
+  u.searchParams.set("limit", "10000");
+  const raw = await get<GolemioStops>(u.toString(), opts);
+  const seen = new Set<string>();
+  for (const f of raw.features ?? []) {
+    const n = f.properties?.stop_name;
+    if (f.properties?.location_type === 0 && n) seen.add(n);
+  }
+  return [...seen].sort();
+}

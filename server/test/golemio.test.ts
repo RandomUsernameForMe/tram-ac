@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { fetchDepartureboards, fetchStops } from "../src/golemio.ts";
+import { fetchDepartureboards, fetchStops, fetchStopsByName } from "../src/golemio.ts";
 
 function fakeFetch(captured: { url?: string; headers?: any }) {
   return vi.fn(async (url: string, init: any) => {
@@ -28,5 +28,13 @@ describe("golemio client", () => {
   it("throws on non-ok response", async () => {
     const bad = vi.fn(async () => ({ ok: false, status: 500 }) as any);
     await expect(fetchStops(0, 0, { fetchImpl: bad, key: "K" })).rejects.toThrow();
+  });
+
+  it("fetchStopsByName uses names[] param", async () => {
+    const cap: any = {};
+    await fetchStopsByName("Národní třída", { fetchImpl: fakeFetch(cap), key: "K" });
+    const dec = decodeURIComponent(cap.url).replace(/\+/g, " ");
+    expect(dec).toContain("/v2/gtfs/stops");
+    expect(dec).toContain("names[]=Národní třída");
   });
 });
