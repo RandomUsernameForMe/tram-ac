@@ -50,7 +50,7 @@ function App() {
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 12, color: "#eaf5f0", background: "#0b3d2e", minHeight: "100vh" }}>
-      <h1 style={{ fontSize: 18 }}>Tram-AC ❄️</h1>
+      <h1 style={{ fontSize: 18 }}>PragAC ❄️</h1>
       <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a stop…"
         style={{ width: "100%", padding: 8, marginBottom: 8, boxSizing: "border-box" }} />
       {names.map((n) => (

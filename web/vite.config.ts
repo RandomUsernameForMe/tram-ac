@@ -8,8 +8,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "Tram-AC",
-        short_name: "Tram-AC",
+        name: "PragAC",
+        short_name: "PragAC",
         description: "Is the next Prague tram air-conditioned?",
         theme_color: "#0b3d2e",
         background_color: "#0b3d2e",

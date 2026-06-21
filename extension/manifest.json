@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tram-AC",
+  "name": "PragAC",
   "version": "0.1.0",
   "description": "Is your next Prague tram air-conditioned? Shows AC beside Google Maps.",
   "permissions": ["sidePanel", "tabs"],
@@ -10,5 +10,5 @@
   "content_scripts": [
     { "matches": ["https://www.google.com/maps/*"], "js": ["src/content.ts"], "run_at": "document_idle" }
   ],
-  "action": { "default_title": "Tram-AC ❄️" }
+  "action": { "default_title": "PragAC ❄️" }
 }
