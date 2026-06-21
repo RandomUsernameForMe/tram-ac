@@ -1,0 +1,20 @@
+{
+  "stops": [],
+  "departures": [
+    {
+      "route": { "short_name": "9", "type": 0 },
+      "trip": { "headsign": "Spojovací", "is_air_conditioned": true, "is_wheelchair_accessible": true },
+      "departure_timestamp": { "predicted": "2026-06-21T14:03:00+02:00", "scheduled": "2026-06-21T14:02:00+02:00", "minutes": "3" }
+    },
+    {
+      "route": { "short_name": "22", "type": 0 },
+      "trip": { "headsign": "Bílá Hora", "is_air_conditioned": false, "is_wheelchair_accessible": true },
+      "departure_timestamp": { "predicted": "2026-06-21T14:07:00+02:00", "scheduled": "2026-06-21T14:07:00+02:00", "minutes": "7" }
+    },
+    {
+      "route": { "short_name": "12", "type": 0 },
+      "trip": { "headsign": "Palmovka", "is_wheelchair_accessible": false },
+      "departure_timestamp": { "predicted": "2026-06-21T14:09:00+02:00", "scheduled": "2026-06-21T14:09:00+02:00", "minutes": "9" }
+    }
+  ]
+}
