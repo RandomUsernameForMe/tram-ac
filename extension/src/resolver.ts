@@ -4,8 +4,14 @@ const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").to
 
 export function pickPlatform(
   platforms: { stop: Stop; departures: Departure[] }[],
-  leg: { line: string; destination: string },
+  leg: { line: string; destination: string; platformCode?: string },
 ): Stop | null {
+  // Most reliable: Maps detail view names the platform (e.g. "Nástupiště A").
+  if (leg.platformCode) {
+    const byPlat = platforms.find((p) => p.stop.platformCode?.toUpperCase() === leg.platformCode!.toUpperCase());
+    if (byPlat) return byPlat.stop;
+  }
+  // Else match the platform whose departures on this line head toward the destination.
   const dest = norm(leg.destination);
   if (!dest) return null;
   for (const p of platforms) {
