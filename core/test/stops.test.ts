@@ -1,6 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { normalizeStops } from "../src/normalize.ts";
+import { normalizeStops, dedupeStops } from "../src/normalize.ts";
+
+describe("dedupeStops", () => {
+  it("collapses duplicate name+platform, keeping the first (nearest)", () => {
+    const out = dedupeStops([
+      { id: "A1", name: "Laurová", platformCode: "A", lat: 0, lon: 0, distanceM: 37 },
+      { id: "A2", name: "Laurová", platformCode: "A", lat: 0, lon: 0, distanceM: 37 },
+      { id: "B1", name: "Laurová", platformCode: "B", lat: 0, lon: 0, distanceM: 70 },
+    ]);
+    expect(out.map((s) => s.id)).toEqual(["A1", "B1"]);
+  });
+});
 
 describe("normalizeStops", () => {
   it("keeps boardable platforms, reads stop_id + coords [lon,lat] + distance", () => {

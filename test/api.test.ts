@@ -1,11 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 
 vi.mock("../core/src/golemio.ts", () => ({
-  fetchDepartureboards: vi.fn(async () => ({ departures: [
+  // U539Z1P serves a tram; U900Z1P (bus-only) returns no tram departures.
+  fetchDepartureboards: vi.fn(async (id: string) => ({ departures: id === "U539Z1P" ? [
     { route: { short_name: "9", type: 0 }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
+  ] : [
+    { route: { short_name: "177", type: 3 }, trip: { headsign: "Bus" }, departure_timestamp: { minutes: 2 } },
   ]})),
   fetchStops: vi.fn(async () => ({ features: [
     { properties: { stop_id: "U539Z1P", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 5 }, geometry: { coordinates: [14.4196, 50.0812] } },
+    { properties: { stop_id: "U539Z1Pdup", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 6 }, geometry: { coordinates: [14.4196, 50.0812] } },
+    { properties: { stop_id: "U900Z1P", stop_name: "Laurová", platform_code: "A", location_type: 0, distance: 30 }, geometry: { coordinates: [14.40, 50.07] } },
   ]})),
   fetchStopsByName: vi.fn(async () => ({ features: [
     { properties: { stop_id: "U539Z1P", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 0 }, geometry: { coordinates: [14.4196, 50.0812] } },
@@ -51,11 +56,12 @@ describe("api handlers", () => {
     expect(res._status).toBe(400);
   });
 
-  it("stops returns normalized list", async () => {
+  it("stops returns only tram-serving stops, deduped", async () => {
     const res = mockRes();
     await stops({ query: { lat: "50.08", lon: "14.41" } } as any, res);
     expect(res._status).toBe(200);
-    expect(res._json.stops[0].id).toBe("U539Z1P");
+    // dup platform collapsed, bus-only Laurová dropped → only the tram stop remains
+    expect(res._json.stops.map((s: any) => s.id)).toEqual(["U539Z1P"]);
   });
 
   it("stops without coords → 400", async () => {
