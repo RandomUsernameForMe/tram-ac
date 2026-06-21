@@ -6,8 +6,8 @@ describe("normalizeDepartures", () => {
   it("maps fields and preserves AC flag", () => {
     const raw = {
       departures: [
-        { route: { short_name: "9" }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
-        { route: { short_name: "22" }, trip: { headsign: "Bílá Hora", is_air_conditioned: false }, departure_timestamp: { minutes: 7 } },
+        { route: { short_name: "9", type: 0 }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
+        { route: { short_name: "22", type: 0 }, trip: { headsign: "Bílá Hora", is_air_conditioned: false }, departure_timestamp: { minutes: 7 } },
       ],
     };
     const out = normalizeDepartures(raw);
@@ -17,17 +17,26 @@ describe("normalizeDepartures", () => {
     ]);
   });
 
+  it("keeps only trams (route_type 0), dropping buses/metro", () => {
+    const out = normalizeDepartures({ departures: [
+      { route: { short_name: "9", type: 0 }, trip: { headsign: "Tram" }, departure_timestamp: { minutes: 2 } },
+      { route: { short_name: "177", type: 3 }, trip: { headsign: "Bus" }, departure_timestamp: { minutes: 1 } },
+      { route: { short_name: "A", type: 1 }, trip: { headsign: "Metro" }, departure_timestamp: { minutes: 1 } },
+    ]});
+    expect(out.map((d) => d.line)).toEqual(["9"]);
+  });
+
   it("uses null when AC flag is missing", () => {
     const out = normalizeDepartures({ departures: [
-      { route: { short_name: "5" }, trip: { headsign: "X" }, departure_timestamp: { minutes: 1 } },
+      { route: { short_name: "5", type: 0 }, trip: { headsign: "X" }, departure_timestamp: { minutes: 1 } },
     ]});
     expect(out[0].airConditioned).toBeNull();
   });
 
   it("coerces string minutes to number and sorts ascending", () => {
     const out = normalizeDepartures({ departures: [
-      { route: { short_name: "5" }, trip: { headsign: "X" }, departure_timestamp: { minutes: "10" } },
-      { route: { short_name: "5" }, trip: { headsign: "X" }, departure_timestamp: { minutes: "2" } },
+      { route: { short_name: "5", type: 0 }, trip: { headsign: "X" }, departure_timestamp: { minutes: "10" } },
+      { route: { short_name: "5", type: 0 }, trip: { headsign: "X" }, departure_timestamp: { minutes: "2" } },
     ]});
     expect(out.map(d => d.minutes)).toEqual([2, 10]);
   });
@@ -40,6 +49,7 @@ describe("normalizeDepartures", () => {
     const raw = JSON.parse(readFileSync(new URL("./fixtures/departureboards.json", import.meta.url), "utf8"));
     const out = normalizeDepartures(raw);
     expect(Array.isArray(out)).toBe(true);
+    expect(out.length).toBeGreaterThan(0);
     for (const d of out) {
       expect(typeof d.line).toBe("string");
       expect(typeof d.minutes).toBe("number");

@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 
 vi.mock("../core/src/golemio.ts", () => ({
   fetchDepartureboards: vi.fn(async () => ({ departures: [
-    { route: { short_name: "9" }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
+    { route: { short_name: "9", type: 0 }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
   ]})),
   fetchStops: vi.fn(async () => ({ features: [
     { properties: { stop_id: "U539Z1P", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 5 }, geometry: { coordinates: [14.4196, 50.0812] } },
