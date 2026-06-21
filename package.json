@@ -1,6 +1,7 @@
 {
   "name": "tram-ac",
   "private": true,
+  "type": "module",
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "vercel dev",
