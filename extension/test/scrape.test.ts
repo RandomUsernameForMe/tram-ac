@@ -1,5 +1,20 @@
 import { describe, it, expect } from "vitest";
-import { parseLeg } from "../src/scrape.ts";
+import { parseLeg, parseOverview } from "../src/scrape.ts";
+
+describe("parseOverview", () => {
+  it("extracts line + boarding stop from real captured cs overview text", () => {
+    // Captured headlessly from Google Maps (cs locale), first trip row:
+    const text = "Nejbližší odjezd ne 21. 6. Možnosti 38 min 9:11—9:49 22 9:14 z: Národní divadlo 50,00 Kč 3 min Podrobnosti";
+    expect(parseOverview(text)).toEqual({ line: "22", stopName: "Národní divadlo", destination: "" });
+  });
+  it("extracts from en 'from' variant", () => {
+    const text = "38 min 9:11—9:49 9 9:14 from National Theatre 50 CZK";
+    expect(parseOverview(text)).toEqual({ line: "9", stopName: "National Theatre", destination: "" });
+  });
+  it("returns null when no trip row present", () => {
+    expect(parseOverview("Explore Prague restaurants and bars")).toBeNull();
+  });
+});
 
 describe("parseLeg", () => {
   it("extracts line number, stop, destination (English 'toward')", () => {

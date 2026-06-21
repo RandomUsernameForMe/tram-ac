@@ -33,7 +33,8 @@ Chrome MV3 side panel showing tram AC beside Google Maps.
 - Build: `pnpm --filter extension build` → load `extension/dist` unpacked at chrome://extensions.
 - Click the toolbar icon to open the side panel beside Maps.
 - Uses the deployed API (`/api/stops/search`, `/api/stops/by-name`, `/api/departures`) with CORS.
-- Content script scrapes the active Maps route (best-effort); manual stop search is the fallback.
+- Content script parses the Maps directions panel TEXT (locale-tolerant, obfuscation-proof) for the first trip's line + boarding stop; manual stop search is the fallback.
+- Re-derive/verify the Maps parsing: `node extension/scripts/capture-maps.mjs` (uses installed Chrome via Playwright; `HEADLESS=0` to watch). Verified headlessly 2026-06-21: yields line + boarding stop. Destination headsign isn't in the overview, so platform auto-pick falls back to the platform list.
 
 ## Status
 Phase 1 (PWA + API) deployed and live-verified against real Golemio data.
