@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { fetchDepartureboards } from "../server/src/golemio.ts";
-import { normalizeDepartures } from "../server/src/normalize.ts";
+import { fetchDepartureboards } from "../server/src/golemio";
+import { normalizeDepartures } from "../server/src/normalize";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const stop = req.query.stop;

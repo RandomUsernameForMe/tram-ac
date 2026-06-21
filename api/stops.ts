@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { fetchStops } from "../server/src/golemio.ts";
-import { normalizeStops } from "../server/src/normalize.ts";
+import { fetchStops } from "../server/src/golemio";
+import { normalizeStops } from "../server/src/normalize";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const lat = Number(req.query.lat), lon = Number(req.query.lon);

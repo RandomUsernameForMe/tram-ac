@@ -1,4 +1,4 @@
-import type { Departure, GolemioDepartureboards, Stop, GolemioStops } from "./types.ts";
+import type { Departure, GolemioDepartureboards, Stop, GolemioStops } from "./types";
 
 export function normalizeDepartures(raw: GolemioDepartureboards): Departure[] {
   const list = raw?.departures ?? [];

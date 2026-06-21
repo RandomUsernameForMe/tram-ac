@@ -1,5 +1,5 @@
-import { config } from "./config.ts";
-import type { GolemioDepartureboards, GolemioStops } from "./types.ts";
+import { config } from "./config";
+import type { GolemioDepartureboards, GolemioStops } from "./types";
 
 interface Opts { fetchImpl?: typeof fetch; key?: string }
 
