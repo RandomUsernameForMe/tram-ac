@@ -1,20 +1,23 @@
-import { parseLeg } from "./scrape.ts";
+import { parseOverview, parseLeg } from "./scrape.ts";
 import type { ScrapedLeg } from "./types.ts";
 
-// NOTE: Google Maps DOM is undocumented and changes. Selectors below are best-effort
-// with text-scan fallbacks; confirm/refine against a live capture (plan Task 9 Step 1).
+// Google Maps transit DOM is obfuscated and localized, so we parse the directions
+// panel's visible TEXT rather than brittle class selectors. parseOverview pulls the
+// first trip's line + boarding stop from the overview ("… 22 9:14 z: Národní divadlo …").
+// Verified headlessly via extension/scripts/capture-maps.mjs (cs locale, 2026-06-21).
 function readLeg(): ScrapedLeg | null {
-  const lineEl = document.querySelector('[aria-label*="Tram"], [aria-label*="Tramvaj"]');
-  const lineText = lineEl?.getAttribute("aria-label") ?? lineEl?.textContent ?? "";
+  const panel = document.querySelector('[role="main"]') as HTMLElement | null;
+  const text = panel?.innerText ?? document.body.innerText ?? "";
+  const overview = parseOverview(text);
+  if (overview) return overview;
 
-  const towardEl = Array.from(document.querySelectorAll("span, div"))
+  // Fallback: detail view sometimes exposes a tram badge + "toward/směr" headsign.
+  const lineEl = document.querySelector('img[alt*="Tram" i], [aria-label*="Tram" i]');
+  const lineText = lineEl?.getAttribute("aria-label") ?? lineEl?.getAttribute("alt") ?? lineEl?.textContent ?? "";
+  const towardEl = Array.from(document.querySelectorAll("span,div"))
     .find((n) => /(^|\s)(toward|towards|směr|smer)\s+/i.test(n.textContent ?? ""));
   const towardText = towardEl?.textContent ?? "";
-
-  const stopEl = document.querySelector('[data-stop-name], [class*="transit-stop"]');
-  const stopText = stopEl?.getAttribute("data-stop-name") ?? stopEl?.textContent ?? "";
-
-  return parseLeg({ lineText, stopText, towardText });
+  return parseLeg({ lineText, stopText: "", towardText });
 }
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
