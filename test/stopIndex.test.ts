@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { matchNames, getStopNames, _resetIndex } from "../server/src/stopIndex";
+import { matchNames, getStopNames, _resetIndex } from "../core/src/stopIndex";
 
 describe("matchNames", () => {
   it("substring match, diacritics-insensitive, capped", () => {

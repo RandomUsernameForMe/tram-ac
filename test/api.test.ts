@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("../server/src/golemio.ts", () => ({
+vi.mock("../core/src/golemio.ts", () => ({
   fetchDepartureboards: vi.fn(async () => ({ departures: [
     { route: { short_name: "9" }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
   ]})),
@@ -18,8 +18,8 @@ import stops from "../api/stops.ts";
 import health from "../api/health.ts";
 import byName from "../api/stops/by-name.ts";
 import search from "../api/stops/search.ts";
-import { setCors } from "../server/src/cors";
-import { _resetIndex } from "../server/src/stopIndex";
+import { setCors } from "../core/src/cors";
+import { _resetIndex } from "../core/src/stopIndex";
 
 function mockRes() {
   const r: any = { _status: 0, _json: undefined, _ended: false, _headers: {} };

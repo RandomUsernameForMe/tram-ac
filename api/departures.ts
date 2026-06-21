@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { setCors } from "../server/src/cors";
-import { fetchDepartureboards } from "../server/src/golemio";
-import { normalizeDepartures } from "../server/src/normalize";
+import { setCors } from "../core/src/cors";
+import { fetchDepartureboards } from "../core/src/golemio";
+import { normalizeDepartures } from "../core/src/normalize";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   setCors(res);

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { setCors } from "../../server/src/cors";
-import { fetchAllStopNames } from "../../server/src/golemio";
-import { getStopNames, matchNames } from "../../server/src/stopIndex";
+import { setCors } from "../../core/src/cors";
+import { fetchAllStopNames } from "../../core/src/golemio";
+import { getStopNames, matchNames } from "../../core/src/stopIndex";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   setCors(res);

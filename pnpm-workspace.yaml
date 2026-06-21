@@ -1,6 +1,6 @@
 packages:
   - shared
-  - server
+  - core
   - web
   - extension
 allowBuilds:
