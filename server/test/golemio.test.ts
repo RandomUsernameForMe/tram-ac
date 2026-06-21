@@ -9,21 +9,20 @@ function fakeFetch(captured: { url?: string; headers?: any }) {
 }
 
 describe("golemio client", () => {
-  it("calls departureboards with aswIds and access token, no airCondition filter", async () => {
+  it("calls departureboards with ids and access token, no airCondition filter", async () => {
     const cap: any = {};
-    await fetchDepartureboards("539_1", { fetchImpl: fakeFetch(cap), key: "K" });
+    await fetchDepartureboards("U539Z1P", { fetchImpl: fakeFetch(cap), key: "K" });
     expect(cap.url).toContain("/v2/pid/departureboards");
-    expect(cap.url).toContain("aswIds=539_1");
+    expect(cap.url).toContain("ids=U539Z1P");
     expect(cap.url).not.toContain("airCondition");
     expect(cap.headers["x-access-token"]).toBe("K");
   });
 
-  it("calls gtfs/stops with coordinates", async () => {
+  it("calls gtfs/stops with latlng", async () => {
     const cap: any = {};
     await fetchStops(50.09, 14.41, { fetchImpl: fakeFetch(cap), key: "K" });
     expect(cap.url).toContain("/v2/gtfs/stops");
-    expect(cap.url).toContain("lat=50.09");
-    expect(cap.url).toContain("lng=14.41");
+    expect(decodeURIComponent(cap.url)).toContain("latlng=50.09,14.41");
   });
 
   it("throws on non-ok response", async () => {

@@ -3,18 +3,21 @@ import { readFileSync } from "node:fs";
 import { normalizeStops } from "../src/normalize.ts";
 
 describe("normalizeStops", () => {
-  it("builds aswId from node and stop ids and reads coords [lon,lat]", () => {
+  it("keeps boardable platforms, reads stop_id + coords [lon,lat] + distance", () => {
     const raw = { features: [
-      { properties: { stop_name: "Malostranská", asw_node_id: 539, asw_stop_id: 1 },
-        geometry: { coordinates: [14.4128, 50.09] } },
+      { properties: { stop_id: "U539Z1P", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 4.7 },
+        geometry: { coordinates: [14.4196, 50.0812] } },
     ]};
     expect(normalizeStops(raw)).toEqual([
-      { aswId: "539_1", name: "Malostranská", lat: 50.09, lon: 14.4128 },
+      { id: "U539Z1P", name: "Národní třída", platformCode: "A", lat: 50.0812, lon: 14.4196, distanceM: 5 },
     ]);
   });
 
-  it("skips features missing ASW ids", () => {
-    const raw = { features: [ { properties: { stop_name: "X" }, geometry: { coordinates: [14, 50] } } ] };
+  it("skips non-boardable features (entrances/nodes/stations)", () => {
+    const raw = { features: [
+      { properties: { stop_id: "U539S1E1", stop_name: "E1", location_type: 2 }, geometry: { coordinates: [14, 50] } },
+      { properties: { stop_id: "U539N1", stop_name: null, location_type: 3 }, geometry: { coordinates: [14, 50] } },
+    ]};
     expect(normalizeStops(raw)).toEqual([]);
   });
 
@@ -23,7 +26,8 @@ describe("normalizeStops", () => {
     const out = normalizeStops(raw);
     expect(Array.isArray(out)).toBe(true);
     for (const s of out) {
-      expect(s.aswId).toMatch(/^\d+_\d+$/);
+      expect(typeof s.id).toBe("string");
+      expect(s.id.length).toBeGreaterThan(0);
       expect(typeof s.lat).toBe("number");
       expect(typeof s.lon).toBe("number");
     }

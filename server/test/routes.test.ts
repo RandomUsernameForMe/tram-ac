@@ -6,7 +6,7 @@ vi.mock("../src/golemio.ts", () => ({
     { route: { short_name: "9" }, trip: { headsign: "Spojovací", is_air_conditioned: true }, departure_timestamp: { minutes: 3 } },
   ]})),
   fetchStops: vi.fn(async () => ({ features: [
-    { properties: { stop_name: "Malostranská", asw_node_id: 539, asw_stop_id: 1 }, geometry: { coordinates: [14.41, 50.09] } },
+    { properties: { stop_id: "U539Z1P", stop_name: "Národní třída", platform_code: "A", location_type: 0, distance: 5 }, geometry: { coordinates: [14.4196, 50.0812] } },
   ]})),
 }));
 
@@ -35,6 +35,6 @@ describe("routes", () => {
     const app = buildApp();
     const res = await app.inject({ method: "GET", url: "/stops?lat=50.09&lon=14.41" });
     expect(res.statusCode).toBe(200);
-    expect(res.json().stops[0].aswId).toBe("539_1");
+    expect(res.json().stops[0].id).toBe("U539Z1P");
   });
 });

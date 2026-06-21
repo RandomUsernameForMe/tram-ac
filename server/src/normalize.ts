@@ -19,15 +19,17 @@ export function normalizeStops(raw: GolemioStops): Stop[] {
   const features = raw?.features ?? [];
   const out: Stop[] = [];
   for (const f of features) {
-    const node = f.properties?.asw_node_id;
-    const stop = f.properties?.asw_stop_id;
+    const p = f.properties;
     const coords = f.geometry?.coordinates;
-    if (node == null || stop == null || !coords) continue;
+    // Only boardable platforms (location_type 0); skip stations/entrances/nodes.
+    if (!p || p.location_type !== 0 || !p.stop_id || !coords) continue;
     out.push({
-      aswId: `${node}_${stop}`,
-      name: String(f.properties?.stop_name ?? ""),
+      id: p.stop_id,
+      name: String(p.stop_name ?? ""),
+      platformCode: p.platform_code ?? undefined,
       lat: coords[1],
       lon: coords[0],
+      distanceM: p.distance != null ? Math.round(p.distance) : undefined,
     });
   }
   return out;

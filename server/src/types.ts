@@ -7,11 +7,12 @@ export interface Departure {
 }
 
 export interface Stop {
-  aswId: string;   // value for departureboards `aswIds`, e.g. "539_1"
+  id: string;            // GTFS stop_id (e.g. "U539Z1P"), used as departureboards `ids`
   name: string;
+  platformCode?: string; // disambiguates direction at multi-platform stops
   lat: number;
   lon: number;
-  distanceM?: number;
+  distanceM?: number;    // straight-line metres from query point (from Golemio)
 }
 
 // Minimal raw shapes we read from Golemio departureboards.
@@ -24,9 +25,15 @@ export interface GolemioDepartureboards {
   departures?: GolemioRawDeparture[];
 }
 
-// Raw shapes we read from Golemio gtfs/stops (confirm field names via Task 2 probe).
+// Raw shapes we read from Golemio gtfs/stops (confirmed live 2026-06-21).
 export interface GolemioStopFeature {
-  properties?: { stop_name?: string; asw_node_id?: number | string; asw_stop_id?: number | string };
+  properties?: {
+    stop_id?: string;
+    stop_name?: string | null;
+    platform_code?: string | null;
+    location_type?: number; // 0 = boardable platform; 1 station; 2 entrance; 3 node
+    distance?: number;      // metres from query point
+  };
   geometry?: { coordinates?: [number, number] }; // [lon, lat]
 }
 export interface GolemioStops {
