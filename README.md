@@ -1,4 +1,4 @@
-# Tram-AC
+# PragAC
 
 Is your next Prague tram air-conditioned? PWA + thin backend over Golemio open data.
 

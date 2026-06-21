@@ -37,7 +37,7 @@ export default function App() {
 
   return (
     <main style={{ maxWidth: 480, margin: "0 auto", padding: 16, fontFamily: "system-ui, sans-serif", color: "#eaf5f0", background: "#0b3d2e", minHeight: "100vh" }}>
-      <h1 style={{ fontSize: 20 }}>Tram-AC ❄️</h1>
+      <h1 style={{ fontSize: 20 }}>PragAC ❄️</h1>
       {screen.k === "locating" && <p>Finding nearby stops…</p>}
       {screen.k === "error" && <p style={{ color: "#ff9b9b" }}>{screen.msg}</p>}
       {screen.k === "stops" && <StopList stops={screen.stops} onPick={pick} />}
